@@ -1,7 +1,8 @@
-const API_BASE = "http://localhost:8080/api";
+const SCRAPER_API = "http://localhost:8082/api";
+const MEDIA_API = "http://localhost:8081/api";
 
 export async function scrapeUrls(urls) {
-  const response = await fetch(`${API_BASE}/scrape`, {
+  const response = await fetch(`${SCRAPER_API}/scrape`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ urls }),
@@ -21,7 +22,7 @@ export async function fetchMedia({ page, size, type, search }) {
   if (type) params.append("type", type);
   if (search) params.append("search", search);
 
-  const response = await fetch(`${API_BASE}/media?${params}`);
+  const response = await fetch(`${MEDIA_API}/media?${params}`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch media");
