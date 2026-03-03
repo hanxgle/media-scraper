@@ -1,0 +1,5 @@
+rootProject.name = 'backend'
+
+include 'common-events'
+include 'media-service'
+include 'scraper-service'
