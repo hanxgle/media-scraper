@@ -1,5 +1,5 @@
-const SCRAPER_API = "http://localhost:8082/api";
-const MEDIA_API = "http://localhost:8081/api";
+const SCRAPER_API = "http://localhost:8080/scrape";
+const MEDIA_API = "http://localhost:8080/media";
 
 export async function scrapeUrls(urls) {
   const response = await fetch(`${SCRAPER_API}/scrape`, {
