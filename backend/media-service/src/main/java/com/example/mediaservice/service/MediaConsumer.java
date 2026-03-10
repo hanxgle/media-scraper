@@ -1,5 +1,6 @@
 package com.example.mediaservice.service;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ public class MediaConsumer {
     }
 
     @KafkaListener(topics = "media-topic", groupId = "media-group")
+    @CacheEvict(value = "media_cache", allEntries = true)
     public void consume(MediaEvent event) {
         Media media = new Media();
         media.setPageUrl(event.pageUrl());

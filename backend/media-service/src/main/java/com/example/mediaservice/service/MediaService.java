@@ -1,5 +1,6 @@
 package com.example.mediaservice.service;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,16 @@ public class MediaService {
         this.repository = repository;
     }
 
+    @Cacheable(
+        value = "media_cache", 
+        key = "{#type, #search, #pageable.pageNumber, #pageable.pageSize, #pageable.sort}"
+    )
     public Page<Media> getMedia(
         MediaType type,
         String search,
         Pageable pageable
     ) {
+        System.out.println("DEBUG: Fetching data from getMedia...");
         if (type != null && search != null) {
             return repository.findByTypeAndMediaUrlContainingIgnoreCase(type, search, pageable);
         }

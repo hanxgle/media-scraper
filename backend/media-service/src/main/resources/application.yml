@@ -29,14 +29,6 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         "[spring.json.trusted.packages]": "*"
-  data:
-    redis:
-      host: redis
-      port: 6379
-  cache:
-    type: redis
-    redis:
-      time-to-live: 600000
 
 server:
   port: 8081
@@ -50,6 +42,8 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+      springframework:
+        cache: DEBUG
 
 eureka:
   client:

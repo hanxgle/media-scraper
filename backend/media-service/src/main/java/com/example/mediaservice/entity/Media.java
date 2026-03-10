@@ -1,5 +1,6 @@
 package com.example.mediaservice.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.example.mediaservice.enums.MediaType;
@@ -23,7 +24,9 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Media {
+public class Media implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
