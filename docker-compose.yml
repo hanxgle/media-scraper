@@ -11,6 +11,17 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   media-service:
     build: ./backend/media-service
@@ -20,6 +31,8 @@ services:
       postgres:
         condition: service_healthy
       kafka:
+        condition: service_started
+      redis:
         condition: service_started
 
   scraper-service:
@@ -53,6 +66,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 40s
 
   frontend:
     build: ./frontend
