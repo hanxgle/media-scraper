@@ -1,4 +1,17 @@
 services:
+  eureka-server:
+    build: 
+      context: ./backend/eureka # The folder containing your Dockerfile
+      dockerfile: Dockerfile    # The name of your Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"] # Requires actuator
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   media-service:
     build: ./backend/media-service
     ports:
@@ -15,6 +28,14 @@ services:
       - "8082:8082"
     depends_on:
       - kafka
+
+  api-gateway:
+    build: ./backend/api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
 
   postgres:
     image: postgres:16
@@ -59,11 +80,3 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
-  api-gateway:
-    build: ./backend/api-gateway
-    ports:
-      - "8080:8080"
-    depends_on:
-      - media-service
-      - scraper-service

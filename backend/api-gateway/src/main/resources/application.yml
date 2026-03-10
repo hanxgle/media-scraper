@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: media-service
+          uri: lb://media-service
+          predicates:
+            - Path=/api/media/**
+        
+        - id: scraper-service
+          uri: lb://scraper-service
+          predicates:
+            - Path=/api/scrape/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
