@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.mediaservice.dto.MediaResponse;
 import com.example.mediaservice.entity.Media;
 import com.example.mediaservice.enums.MediaType;
 import com.example.mediaservice.repository.MediaScraperRepository;
@@ -14,29 +15,30 @@ public class MediaService {
 
     private final MediaScraperRepository repository;
 
+
     public MediaService(MediaScraperRepository repository) {
         this.repository = repository;
     }
 
-    @Cacheable(
-        value = "media_cache", 
-        key = "{#type, #search, #pageable.pageNumber, #pageable.pageSize, #pageable.sort}"
-    )
-    public Page<Media> getMedia(
+    @Cacheable(value = "media_cache", key = "{ #type, #search, #pageable.pageNumber }")
+    public MediaResponse getMedia(
         MediaType type,
         String search,
         Pageable pageable
     ) {
+        Page<Media> mediaPage;
         System.out.println("DEBUG: Fetching data from getMedia...");
         if (type != null && search != null) {
-            return repository.findByTypeAndMediaUrlContainingIgnoreCase(type, search, pageable);
+            mediaPage = repository.findByTypeAndMediaUrlContainingIgnoreCase(type, search, pageable);
         }
         else if (type != null) {
-            return repository.findByType(type, pageable);
+            mediaPage = repository.findByType(type, pageable);
         }
         else if (search != null) {
-            return repository.findByMediaUrlContainingIgnoreCase(search, pageable);
+            mediaPage = repository.findByMediaUrlContainingIgnoreCase(search, pageable);
         }
-        return repository.findAll(pageable);
+        mediaPage = repository.findAll(pageable);
+
+        return new MediaResponse(mediaPage);
     }
 }
